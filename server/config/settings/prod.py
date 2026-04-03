@@ -1,0 +1,31 @@
+from .base import *
+import os
+
+DEBUG = False
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get("ALLOWED_HOSTS", "").split(",")
+    if host.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" for host in ALLOWED_HOSTS
+]
+
+# Security settings (production safe)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Static files (Whitenoise)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

@@ -1,0 +1,21 @@
+# VS Code
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+static/
+
+# Env
+.env
+venv/
+.venv/
+
+# Node (future client)
+node_modules/
+dist/
+build/
