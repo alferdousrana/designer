@@ -1,5 +1,6 @@
 import "./ProjectsShowcaseSection.css";
 import { fallbackProjects } from "../../data/fallbackProjects";
+import { Link } from "react-router-dom";
 
 function getProjectImage(project) {
   return (
@@ -130,14 +131,12 @@ function ProjectsShowcaseSection({ projects }) {
                       </span>
                     </div>
 
-                    <a
-                      href={project.live_url}
-                      className="project-showcase-link"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Showcase
-                    </a>
+                  <Link
+                    to={`/project/${project.slug}`}
+                    className="project-showcase-link"
+                  >
+                    Showcase
+                  </Link>               
                   </div>
                 </div>
               </article>

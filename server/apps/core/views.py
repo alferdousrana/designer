@@ -10,9 +10,15 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiPara
 from .models import (
     HeroSection,
     AboutSection,
+    BrandLogo,
     Skill,
-    Service,
+    ExperienceSection,
+    ExperienceItem,
+    TestimonialsSection,
     Testimonial,
+    ProjectsShowcaseSection,
+    BlogSection,
+    ContactSection,
     SocialLink,
     ContactInfo,
     ContactMessage,
@@ -20,9 +26,15 @@ from .models import (
 from .serializers import (
     HeroSectionSerializer,
     AboutSectionSerializer,
+    BrandLogoSerializer,
     SkillSerializer,
-    ServiceSerializer,
+    ExperienceSectionSerializer,
+    ExperienceItemSerializer,
+    TestimonialsSectionSerializer,
     TestimonialSerializer,
+    ProjectsShowcaseSectionSerializer,
+    BlogSectionSerializer,
+    ContactSectionSerializer,
     SocialLinkSerializer,
     ContactInfoSerializer,
     ContactMessageSerializer,
@@ -68,9 +80,15 @@ class HomePageAPIView(generics.GenericAPIView):
         data = {
             "hero": HeroSection.objects.filter(is_active=True).order_by("-updated_at").first(),
             "about": AboutSection.objects.filter(is_active=True).order_by("-updated_at").first(),
+            "brand_logos": BrandLogo.objects.filter(is_active=True).order_by("order", "id"),
             "skills": Skill.objects.filter(is_active=True).order_by("order", "id"),
-            "services": Service.objects.filter(is_active=True).order_by("order", "id"),
+            "experience_section": ExperienceSection.objects.filter(is_active=True).order_by("-updated_at").first(),
+            "experience_items": ExperienceItem.objects.filter(is_active=True).order_by("order", "id"),
+            "testimonials_section": TestimonialsSection.objects.filter(is_active=True).order_by("-updated_at").first(),
             "testimonials": Testimonial.objects.filter(is_active=True).order_by("order", "id"),
+            "projects_showcase_section": ProjectsShowcaseSection.objects.filter(is_active=True).order_by("-updated_at").first(),
+            "blog_section": BlogSection.objects.filter(is_active=True).order_by("-updated_at").first(),
+            "contact_section": ContactSection.objects.filter(is_active=True).order_by("-updated_at").first(),
             "social_links": SocialLink.objects.filter(is_active=True).order_by("order", "id"),
             "contact_info": ContactInfo.objects.filter(is_active=True).order_by("-updated_at").first(),
         }
@@ -109,11 +127,31 @@ class AboutSectionPublicAPIView(generics.RetrieveAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=["Core Public"],
+        summary="List active brand logos",
+        parameters=[
+            OpenApiParameter(name="ordering", required=False, type=str, description="order, created_at"),
+            OpenApiParameter(name="page", required=False, type=int, description="Page number"),
+        ],
+    )
+)
+class BrandLogoListPublicAPIView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = BrandLogoSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = ["order", "created_at"]
+    ordering = ["order", "id"]
+
+    def get_queryset(self):
+        return BrandLogo.objects.filter(is_active=True).order_by("order", "id")
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
         summary="List active skills",
         parameters=[
-            OpenApiParameter(name="category", required=False, type=str, description="Filter by skill category"),
-            OpenApiParameter(name="search", required=False, type=str, description="Search by skill name or category"),
-            OpenApiParameter(name="ordering", required=False, type=str, description="order, name, proficiency, created_at"),
+            OpenApiParameter(name="search", required=False, type=str, description="Search by skill title or description"),
+            OpenApiParameter(name="ordering", required=False, type=str, description="order, title, created_at"),
             OpenApiParameter(name="page", required=False, type=int, description="Page number"),
         ],
     )
@@ -122,9 +160,9 @@ class SkillListPublicAPIView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = SkillSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ["category"]
-    search_fields = ["name", "category"]
-    ordering_fields = ["order", "name", "proficiency", "created_at"]
+    filterset_fields = ["is_active"]
+    search_fields = ["title", "description", "number", "project_link_text"]
+    ordering_fields = ["order", "title", "created_at"]
     ordering = ["order", "id"]
 
     def get_queryset(self):
@@ -134,24 +172,53 @@ class SkillListPublicAPIView(generics.ListAPIView):
 @extend_schema_view(
     get=extend_schema(
         tags=["Core Public"],
-        summary="List active services",
+        summary="Get active experience section",
+    )
+)
+class ExperienceSectionPublicAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ExperienceSectionSerializer
+
+    def get_object(self):
+        return ExperienceSection.objects.filter(is_active=True).order_by("-updated_at").first()
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
+        summary="List active experience items",
         parameters=[
-            OpenApiParameter(name="search", required=False, type=str, description="Search by title, description, or slug"),
-            OpenApiParameter(name="ordering", required=False, type=str, description="order, title, created_at"),
+            OpenApiParameter(name="search", required=False, type=str, description="Search experience items"),
+            OpenApiParameter(name="ordering", required=False, type=str, description="order, year, title, created_at"),
             OpenApiParameter(name="page", required=False, type=int, description="Page number"),
         ],
     )
 )
-class ServiceListPublicAPIView(generics.ListAPIView):
+class ExperienceItemListPublicAPIView(generics.ListAPIView):
     permission_classes = [AllowAny]
-    serializer_class = ServiceSerializer
+    serializer_class = ExperienceItemSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ["title", "short_description", "slug"]
-    ordering_fields = ["order", "title", "created_at"]
+    filterset_fields = ["is_active"]
+    search_fields = ["year", "title", "description"]
+    ordering_fields = ["order", "year", "title", "created_at"]
     ordering = ["order", "id"]
 
     def get_queryset(self):
-        return Service.objects.filter(is_active=True).order_by("order", "id")
+        return ExperienceItem.objects.filter(is_active=True).order_by("order", "id")
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
+        summary="Get active testimonials section",
+    )
+)
+class TestimonialsSectionPublicAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = TestimonialsSectionSerializer
+
+    def get_object(self):
+        return TestimonialsSection.objects.filter(is_active=True).order_by("-updated_at").first()
 
 
 @extend_schema_view(
@@ -195,6 +262,48 @@ class FeaturedTestimonialListPublicAPIView(generics.ListAPIView):
             is_active=True,
             is_featured=True,
         ).order_by("order", "id")
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
+        summary="Get active projects showcase section",
+    )
+)
+class ProjectsShowcaseSectionPublicAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ProjectsShowcaseSectionSerializer
+
+    def get_object(self):
+        return ProjectsShowcaseSection.objects.filter(is_active=True).order_by("-updated_at").first()
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
+        summary="Get active blog section",
+    )
+)
+class BlogSectionPublicAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = BlogSectionSerializer
+
+    def get_object(self):
+        return BlogSection.objects.filter(is_active=True).order_by("-updated_at").first()
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Core Public"],
+        summary="Get active contact section",
+    )
+)
+class ContactSectionPublicAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ContactSectionSerializer
+
+    def get_object(self):
+        return ContactSection.objects.filter(is_active=True).order_by("-updated_at").first()
 
 
 @extend_schema_view(
@@ -315,6 +424,35 @@ class AboutSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 @extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List brand logos"),
+    post=extend_schema(tags=["Core Manage"], summary="Create brand logo"),
+)
+class BrandLogoManageAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = BrandLogoSerializer
+    queryset = BrandLogo.objects.all().order_by("order", "id")
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["is_active"]
+    search_fields = ["name"]
+    ordering_fields = ["order", "created_at"]
+    ordering = ["order", "id"]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve brand logo"),
+    put=extend_schema(tags=["Core Manage"], summary="Update brand logo"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update brand logo"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete brand logo"),
+)
+class BrandLogoManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = BrandLogoSerializer
+    queryset = BrandLogo.objects.all()
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+
+@extend_schema_view(
     get=extend_schema(tags=["Core Manage"], summary="List skills"),
     post=extend_schema(tags=["Core Manage"], summary="Create skill"),
 )
@@ -323,9 +461,9 @@ class SkillManageAPIView(generics.ListCreateAPIView):
     serializer_class = SkillSerializer
     queryset = Skill.objects.all().order_by("order", "id")
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ["category", "is_active"]
-    search_fields = ["name", "category"]
-    ordering_fields = ["order", "name", "proficiency", "created_at"]
+    filterset_fields = ["is_active"]
+    search_fields = ["title", "description", "number", "project_link_text"]
+    ordering_fields = ["order", "title", "created_at"]
     ordering = ["order", "id"]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
@@ -344,30 +482,80 @@ class SkillManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 @extend_schema_view(
-    get=extend_schema(tags=["Core Manage"], summary="List services"),
-    post=extend_schema(tags=["Core Manage"], summary="Create service"),
+    get=extend_schema(tags=["Core Manage"], summary="List experience sections"),
+    post=extend_schema(tags=["Core Manage"], summary="Create experience section"),
 )
-class ServiceManageAPIView(generics.ListCreateAPIView):
+class ExperienceSectionManageAPIView(SingleInstanceCreateRestrictionMixin, generics.ListCreateAPIView):
     permission_classes = [IsAdminUser]
-    serializer_class = ServiceSerializer
-    queryset = Service.objects.all().order_by("order", "id")
+    serializer_class = ExperienceSectionSerializer
+    queryset = ExperienceSection.objects.all().order_by("-updated_at")
+    model = ExperienceSection
+    error_message = "Experience Section already exists. You can only update the existing one."
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve experience section"),
+    put=extend_schema(tags=["Core Manage"], summary="Update experience section"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update experience section"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete experience section"),
+)
+class ExperienceSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ExperienceSectionSerializer
+    queryset = ExperienceSection.objects.all()
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List experience items"),
+    post=extend_schema(tags=["Core Manage"], summary="Create experience item"),
+)
+class ExperienceItemManageAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ExperienceItemSerializer
+    queryset = ExperienceItem.objects.all().order_by("order", "id")
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["is_active"]
-    search_fields = ["title", "short_description", "slug"]
-    ordering_fields = ["order", "title", "created_at"]
+    search_fields = ["year", "title", "description"]
+    ordering_fields = ["order", "year", "title", "created_at"]
     ordering = ["order", "id"]
 
 
 @extend_schema_view(
-    get=extend_schema(tags=["Core Manage"], summary="Retrieve service"),
-    put=extend_schema(tags=["Core Manage"], summary="Update service"),
-    patch=extend_schema(tags=["Core Manage"], summary="Partial update service"),
-    delete=extend_schema(tags=["Core Manage"], summary="Delete service"),
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve experience item"),
+    put=extend_schema(tags=["Core Manage"], summary="Update experience item"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update experience item"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete experience item"),
 )
-class ServiceManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ExperienceItemManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
-    serializer_class = ServiceSerializer
-    queryset = Service.objects.all()
+    serializer_class = ExperienceItemSerializer
+    queryset = ExperienceItem.objects.all()
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List testimonials sections"),
+    post=extend_schema(tags=["Core Manage"], summary="Create testimonials section"),
+)
+class TestimonialsSectionManageAPIView(SingleInstanceCreateRestrictionMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = TestimonialsSectionSerializer
+    queryset = TestimonialsSection.objects.all().order_by("-updated_at")
+    model = TestimonialsSection
+    error_message = "Testimonials Section already exists. You can only update the existing one."
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve testimonials section"),
+    put=extend_schema(tags=["Core Manage"], summary="Update testimonials section"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update testimonials section"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete testimonials section"),
+)
+class TestimonialsSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = TestimonialsSectionSerializer
+    queryset = TestimonialsSection.objects.all()
 
 
 @extend_schema_view(
@@ -397,6 +585,78 @@ class TestimonialManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TestimonialSerializer
     queryset = Testimonial.objects.all()
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List projects showcase sections"),
+    post=extend_schema(tags=["Core Manage"], summary="Create projects showcase section"),
+)
+class ProjectsShowcaseSectionManageAPIView(SingleInstanceCreateRestrictionMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ProjectsShowcaseSectionSerializer
+    queryset = ProjectsShowcaseSection.objects.all().order_by("-updated_at")
+    model = ProjectsShowcaseSection
+    error_message = "Projects Showcase Section already exists. You can only update the existing one."
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve projects showcase section"),
+    put=extend_schema(tags=["Core Manage"], summary="Update projects showcase section"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update projects showcase section"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete projects showcase section"),
+)
+class ProjectsShowcaseSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ProjectsShowcaseSectionSerializer
+    queryset = ProjectsShowcaseSection.objects.all()
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List blog sections"),
+    post=extend_schema(tags=["Core Manage"], summary="Create blog section"),
+)
+class BlogSectionManageAPIView(SingleInstanceCreateRestrictionMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = BlogSectionSerializer
+    queryset = BlogSection.objects.all().order_by("-updated_at")
+    model = BlogSection
+    error_message = "Blog Section already exists. You can only update the existing one."
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve blog section"),
+    put=extend_schema(tags=["Core Manage"], summary="Update blog section"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update blog section"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete blog section"),
+)
+class BlogSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = BlogSectionSerializer
+    queryset = BlogSection.objects.all()
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="List contact sections"),
+    post=extend_schema(tags=["Core Manage"], summary="Create contact section"),
+)
+class ContactSectionManageAPIView(SingleInstanceCreateRestrictionMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ContactSectionSerializer
+    queryset = ContactSection.objects.all().order_by("-updated_at")
+    model = ContactSection
+    error_message = "Contact Section already exists. You can only update the existing one."
+
+
+@extend_schema_view(
+    get=extend_schema(tags=["Core Manage"], summary="Retrieve contact section"),
+    put=extend_schema(tags=["Core Manage"], summary="Update contact section"),
+    patch=extend_schema(tags=["Core Manage"], summary="Partial update contact section"),
+    delete=extend_schema(tags=["Core Manage"], summary="Delete contact section"),
+)
+class ContactSectionManageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ContactSectionSerializer
+    queryset = ContactSection.objects.all()
 
 
 @extend_schema_view(

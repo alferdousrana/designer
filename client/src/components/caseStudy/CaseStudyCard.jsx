@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function formatDate(dateString) {
   if (!dateString) return "June 18, 2021";
 
@@ -18,17 +20,17 @@ function getCardImage(item) {
 function CaseStudyCard({ item }) {
   return (
     <article className="case-study-card">
-      <a href={`/case-study/${item.slug}`} className="case-study-card-image-link">
+      <Link to={`/case-study/${item.slug}`} className="case-study-card-image-link">
         <img
           src={getCardImage(item)}
           alt={item.title}
           className="case-study-card-image"
         />
-      </a>
+      </Link>
 
       <div className="case-study-card-content">
         <h2 className="case-study-card-title">
-          <a href={`/case-study/${item.slug}`}>{item.title}</a>
+          <Link to={`/case-study/${item.slug}`}>{item.title}</Link>
         </h2>
 
         <p className="case-study-card-meta">

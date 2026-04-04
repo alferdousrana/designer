@@ -2,9 +2,15 @@ from django.contrib import admin
 from .models import (
     HeroSection,
     AboutSection,
+    BrandLogo,
     Skill,
-    Service,
+    ExperienceSection,
+    ExperienceItem,
+    TestimonialsSection,
     Testimonial,
+    ProjectsShowcaseSection,
+    BlogSection,
+    ContactSection,
     SocialLink,
     ContactInfo,
     ContactMessage,
@@ -25,21 +31,16 @@ class HeroSectionAdmin(SingleInstanceAdmin):
         "updated_at",
     )
     list_filter = ("is_active",)
-    search_fields = ("full_name", "profession")
+    search_fields = ("full_name", "profession", "greeting", "short_bio")
     fieldsets = (
         ("Basic Info", {
             "fields": ("greeting", "full_name", "profession", "short_bio")
         }),
-        ("Buttons", {
-            "fields": (
-                "primary_button_text",
-                "primary_button_link",
-                "secondary_button_text",
-                "secondary_button_link",
-            )
+        ("CTA Button", {
+            "fields": ("primary_button_text", "primary_button_link")
         }),
         ("Media", {
-            "fields": ("resume_file", "profile_image")
+            "fields": ("profile_image",)
         }),
         ("Status", {
             "fields": ("is_active",)
@@ -54,20 +55,245 @@ class AboutSectionAdmin(SingleInstanceAdmin):
         "years_of_experience",
         "completed_projects",
         "happy_clients",
+        "awards",
         "is_active",
         "updated_at",
     )
     list_filter = ("is_active",)
-    search_fields = ("title", "subtitle")
+    search_fields = ("title", "subtitle", "bio")
     fieldsets = (
         ("Content", {
             "fields": ("title", "subtitle", "bio", "profile_image")
         }),
+        ("Buttons & Media", {
+            "fields": (
+                "hire_me_button_text",
+                "hire_me_button_link",
+                "download_cv_text",
+                "download_cv_link",
+                "cv_file",
+                "show_play_button",
+                "video_url",
+            )
+        }),
         ("Stats", {
             "fields": (
-                "years_of_experience",
+                "awards",
                 "completed_projects",
+                "years_of_experience",
                 "happy_clients",
+            )
+        }),
+        ("Status", {
+            "fields": ("is_active",)
+        }),
+    )
+
+
+@admin.register(BrandLogo)
+class BrandLogoAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "order",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("name",)
+    list_editable = ("order", "is_active")
+    ordering = ("order", "id")
+
+
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "number",
+        "project_link_text",
+        "order",
+        "is_active",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("title", "description", "number")
+    list_editable = ("order", "is_active")
+    ordering = ("order", "id")
+
+
+@admin.register(ExperienceSection)
+class ExperienceSectionAdmin(SingleInstanceAdmin):
+    list_display = (
+        "title_light",
+        "title_accent",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("eyebrow", "title_light", "title_accent")
+    fieldsets = (
+        ("Heading", {
+            "fields": ("eyebrow", "title_light", "title_accent")
+        }),
+        ("Media", {
+            "fields": ("experience_image",)
+        }),
+        ("Status", {
+            "fields": ("is_active",)
+        }),
+    )
+
+
+@admin.register(ExperienceItem)
+class ExperienceItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "year",
+        "title",
+        "order",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("year", "title", "description")
+    list_editable = ("order", "is_active")
+    ordering = ("order", "id")
+
+
+@admin.register(TestimonialsSection)
+class TestimonialsSectionAdmin(SingleInstanceAdmin):
+    list_display = (
+        "title_light",
+        "title_accent",
+        "satisfaction_rate",
+        "repeat_order_rate",
+        "google_review_rating",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = (
+        "title_light",
+        "title_accent",
+        "satisfaction_rate_label",
+        "repeat_order_label",
+        "google_review_label",
+    )
+    fieldsets = (
+        ("Heading", {
+            "fields": ("title_light", "title_accent")
+        }),
+        ("Metrics", {
+            "fields": (
+                "satisfaction_rate",
+                "satisfaction_rate_label",
+                "repeat_order_rate",
+                "repeat_order_label",
+                "google_review_rating",
+                "google_review_label",
+            )
+        }),
+        ("CTA Button", {
+            "fields": ("hire_button_text", "hire_button_link")
+        }),
+        ("Status", {
+            "fields": ("is_active",)
+        }),
+    )
+
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = (
+        "client_name",
+        "client_company",
+        "rating",
+        "is_featured",
+        "order",
+        "is_active",
+        "created_at",
+    )
+    list_filter = ("is_featured", "is_active", "rating")
+    search_fields = ("client_name", "client_company", "client_role", "review")
+    list_editable = ("rating", "is_featured", "order", "is_active")
+    ordering = ("order", "id")
+
+
+@admin.register(ProjectsShowcaseSection)
+class ProjectsShowcaseSectionAdmin(SingleInstanceAdmin):
+    list_display = (
+        "title_light",
+        "title_accent",
+        "max_items",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("eyebrow", "title_light", "title_accent")
+    fieldsets = (
+        ("Heading", {
+            "fields": ("eyebrow", "title_light", "title_accent")
+        }),
+        ("Display Settings", {
+            "fields": ("max_items",)
+        }),
+        ("Status", {
+            "fields": ("is_active",)
+        }),
+    )
+
+
+@admin.register(BlogSection)
+class BlogSectionAdmin(SingleInstanceAdmin):
+    list_display = (
+        "title_light",
+        "title_accent",
+        "max_items",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("eyebrow", "title_light", "title_accent")
+    fieldsets = (
+        ("Heading", {
+            "fields": ("eyebrow", "title_light", "title_accent")
+        }),
+        ("Display Settings", {
+            "fields": ("max_items",)
+        }),
+        ("Status", {
+            "fields": ("is_active",)
+        }),
+    )
+
+
+@admin.register(ContactSection)
+class ContactSectionAdmin(SingleInstanceAdmin):
+    list_display = (
+        "title_light",
+        "title_accent",
+        "submit_button_text",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = (
+        "eyebrow",
+        "title_light",
+        "title_accent",
+        "footer_logo_text",
+        "footer_copyright_text",
+        "footer_credit_text",
+    )
+    fieldsets = (
+        ("Heading", {
+            "fields": ("eyebrow", "title_light", "title_accent")
+        }),
+        ("Form Button", {
+            "fields": ("submit_button_text",)
+        }),
+        ("Footer", {
+            "fields": (
+                "footer_logo_text",
+                "footer_copyright_text",
+                "footer_credit_text",
             )
         }),
         ("Status", {
@@ -87,7 +313,7 @@ class ContactInfoAdmin(SingleInstanceAdmin):
         "updated_at",
     )
     list_filter = ("is_active",)
-    search_fields = ("email", "phone", "location", "availability_text")
+    search_fields = ("email", "phone", "whatsapp", "location", "availability_text")
     fieldsets = (
         ("Contact Details", {
             "fields": (
@@ -102,54 +328,6 @@ class ContactInfoAdmin(SingleInstanceAdmin):
             "fields": ("is_active",)
         }),
     )
-
-
-@admin.register(Skill)
-class SkillAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "category",
-        "proficiency",
-        "order",
-        "is_active",
-    )
-    list_filter = ("category", "is_active")
-    search_fields = ("name",)
-    list_editable = ("order", "proficiency", "is_active")
-    ordering = ("order", "id")
-
-
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "slug",
-        "order",
-        "is_active",
-        "updated_at",
-    )
-    list_filter = ("is_active",)
-    search_fields = ("title", "short_description", "slug")
-    list_editable = ("order", "is_active")
-    prepopulated_fields = {"slug": ("title",)}
-    ordering = ("order", "id")
-
-
-@admin.register(Testimonial)
-class TestimonialAdmin(admin.ModelAdmin):
-    list_display = (
-        "client_name",
-        "client_company",
-        "rating",
-        "is_featured",
-        "order",
-        "is_active",
-        "created_at",
-    )
-    list_filter = ("is_featured", "is_active", "rating")
-    search_fields = ("client_name", "client_company", "client_role", "review")
-    list_editable = ("rating", "is_featured", "order", "is_active")
-    ordering = ("order", "id")
 
 
 @admin.register(SocialLink)
@@ -173,6 +351,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
         "full_name",
         "email",
         "subject",
+        "project_type",
         "status",
         "is_read",
         "created_at",
@@ -183,7 +362,9 @@ class ContactMessageAdmin(admin.ModelAdmin):
         "email",
         "subject",
         "message",
+        "phone",
         "company_name",
+        "budget",
         "project_type",
     )
     list_editable = ("status", "is_read")

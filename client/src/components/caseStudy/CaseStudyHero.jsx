@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function CaseStudyHero() {
   return (
     <section className="case-study-hero">
@@ -6,7 +8,7 @@ function CaseStudyHero() {
           <h1 className="case-study-hero-title">Case Study</h1>
 
           <div className="case-study-breadcrumb">
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
             <span>›</span>
             <span>Case Study</span>
           </div>

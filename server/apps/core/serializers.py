@@ -2,9 +2,15 @@ from rest_framework import serializers
 from .models import (
     HeroSection,
     AboutSection,
+    BrandLogo,
     Skill,
-    Service,
+    ExperienceSection,
+    ExperienceItem,
+    TestimonialsSection,
     Testimonial,
+    ProjectsShowcaseSection,
+    BlogSection,
+    ContactSection,
     SocialLink,
     ContactInfo,
     ContactMessage,
@@ -22,9 +28,6 @@ class HeroSectionSerializer(serializers.ModelSerializer):
             "short_bio",
             "primary_button_text",
             "primary_button_link",
-            "secondary_button_text",
-            "secondary_button_link",
-            "resume_file",
             "profile_image",
             "is_active",
         ]
@@ -39,41 +42,89 @@ class AboutSectionSerializer(serializers.ModelSerializer):
             "subtitle",
             "bio",
             "profile_image",
-            "years_of_experience",
+            "hire_me_button_text",
+            "hire_me_button_link",
+            "download_cv_text",
+            "download_cv_link",
+            "cv_file",
+            "show_play_button",
+            "video_url",
+            "awards",
             "completed_projects",
+            "years_of_experience",
             "happy_clients",
             "is_active",
         ]
 
 
-class SkillSerializer(serializers.ModelSerializer):
-    category_display = serializers.CharField(source="get_category_display", read_only=True)
-
+class BrandLogoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Skill
+        model = BrandLogo
         fields = [
             "id",
             "name",
-            "category",
-            "category_display",
-            "icon_image",
-            "icon_class",
-            "proficiency",
+            "image",
             "order",
             "is_active",
         ]
 
 
-class ServiceSerializer(serializers.ModelSerializer):
+class SkillSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Service
+        model = Skill
         fields = [
             "id",
             "title",
-            "short_description",
-            "icon_class",
-            "slug",
+            "number",
+            "description",
+            "project_link",
+            "project_link_text",
             "order",
+            "is_active",
+        ]
+
+
+class ExperienceSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExperienceSection
+        fields = [
+            "id",
+            "eyebrow",
+            "title_light",
+            "title_accent",
+            "experience_image",
+            "is_active",
+        ]
+
+
+class ExperienceItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExperienceItem
+        fields = [
+            "id",
+            "year",
+            "title",
+            "description",
+            "order",
+            "is_active",
+        ]
+
+
+class TestimonialsSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestimonialsSection
+        fields = [
+            "id",
+            "title_light",
+            "title_accent",
+            "satisfaction_rate",
+            "satisfaction_rate_label",
+            "repeat_order_rate",
+            "repeat_order_label",
+            "google_review_rating",
+            "google_review_label",
+            "hire_button_text",
+            "hire_button_link",
             "is_active",
         ]
 
@@ -91,6 +142,48 @@ class TestimonialSerializer(serializers.ModelSerializer):
             "rating",
             "is_featured",
             "order",
+            "is_active",
+        ]
+
+
+class ProjectsShowcaseSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectsShowcaseSection
+        fields = [
+            "id",
+            "eyebrow",
+            "title_light",
+            "title_accent",
+            "max_items",
+            "is_active",
+        ]
+
+
+class BlogSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogSection
+        fields = [
+            "id",
+            "eyebrow",
+            "title_light",
+            "title_accent",
+            "max_items",
+            "is_active",
+        ]
+
+
+class ContactSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactSection
+        fields = [
+            "id",
+            "eyebrow",
+            "title_light",
+            "title_accent",
+            "submit_button_text",
+            "footer_logo_text",
+            "footer_copyright_text",
+            "footer_credit_text",
             "is_active",
         ]
 
@@ -170,8 +263,14 @@ class ContactMessageAdminSerializer(serializers.ModelSerializer):
 class HomePageSerializer(serializers.Serializer):
     hero = HeroSectionSerializer(allow_null=True)
     about = AboutSectionSerializer(allow_null=True)
+    brand_logos = BrandLogoSerializer(many=True)
     skills = SkillSerializer(many=True)
-    services = ServiceSerializer(many=True)
+    experience_section = ExperienceSectionSerializer(allow_null=True)
+    experience_items = ExperienceItemSerializer(many=True)
+    testimonials_section = TestimonialsSectionSerializer(allow_null=True)
     testimonials = TestimonialSerializer(many=True)
+    projects_showcase_section = ProjectsShowcaseSectionSerializer(allow_null=True)
+    blog_section = BlogSectionSerializer(allow_null=True)
+    contact_section = ContactSectionSerializer(allow_null=True)
     social_links = SocialLinkSerializer(many=True)
     contact_info = ContactInfoSerializer(allow_null=True)

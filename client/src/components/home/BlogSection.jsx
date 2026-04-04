@@ -1,5 +1,6 @@
 import "./BlogSection.css";
 import { fallbackBlogs } from "../../data/fallbackBlogs";
+import { Link } from "react-router-dom";
 
 function getBlogImage(blog) {
   return (
@@ -45,30 +46,47 @@ function normalizeBlogsData(blogs) {
   return mapped.length ? mapped : fallbackBlogs;
 }
 
-function BlogSection({ blogs }) {
+function normalizeBlogSectionData(blogSection) {
+  if (!blogSection || blogSection?.is_active === false) {
+    return {
+      eyebrow: "👌 LATEST ARTICLES",
+      title_light: "My Blog",
+      title_accent: "For You",
+    };
+  }
+
+  return {
+    eyebrow: blogSection.eyebrow || "👌 LATEST ARTICLES",
+    title_light: blogSection.title_light || "My Blog",
+    title_accent: blogSection.title_accent || "For You",
+  };
+}
+
+function BlogSection({ blogSection, blogs }) {
+  const safeSection = normalizeBlogSectionData(blogSection);
   const safeBlogs = normalizeBlogsData(blogs);
 
   return (
     <section className="blog-section" id="blog">
       <div className="container">
         <div className="blog-heading">
-          <p className="blog-eyebrow">👌 LATEST ARTICLES</p>
+          <p className="blog-eyebrow">{safeSection.eyebrow}</p>
           <h2 className="blog-title">
-            <span className="blog-title-light">My Blog</span>
-            <span className="blog-title-accent"> For You</span>
+            <span className="blog-title-light">{safeSection.title_light}</span>
+            <span className="blog-title-accent"> {safeSection.title_accent}</span>
           </h2>
         </div>
 
         <div className="blog-grid">
           {safeBlogs.map((blog) => (
             <article className="blog-card" key={blog.id}>
-              <a href={`/blog/${blog.slug}`} className="blog-image-link">
+              <Link to={`/blog/${blog.slug}`} className="blog-image-link">
                 <img src={blog.image} alt={blog.title} className="blog-image" />
-              </a>
+              </Link>
 
               <div className="blog-content">
                 <h3 className="blog-card-title">
-                  <a href={`/blog/${blog.slug}`}>{blog.title}</a>
+                  <Link to={`/blog/${blog.slug}`}>{blog.title}</Link>
                 </h3>
 
                 <p className="blog-date">{formatBlogDate(blog.published_at)}</p>

@@ -8,11 +8,11 @@ function Header() {
         <div className="logo logo-dark">RiJU</div>
 
         <nav className="nav-menu nav-menu-dark">
-          <Link to="/">Home</Link>
-          <a href="#about">Projects</a>
-          <Link to="/case-study">Case Study</Link>
-          <a href="#blog">Blog</a>
-        </nav>
+        <Link to="/">Home</Link>
+        <Link to="/project">Projects</Link>
+        <Link to="/case-study">Case Study</Link>
+        <Link to="/blog">Blog</Link>
+      </nav>
 
         <div className="header-social header-social-dark">
           <a href="/">Dribbble</a>
