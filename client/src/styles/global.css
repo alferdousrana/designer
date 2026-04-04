@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Syne", sans-serif;
+  background-color: #f5f1ea;
+  color: #111111;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.container {
+  width: min(1180px, 92%);
+  margin: 0 auto;
+}
+
+.page-state {
+  color: white;
+  padding: 24px 0;
+}
+
+.temp-debug-section {
+  background: #05050d;
+  color: white;
+  padding-bottom: 60px;
+}
+
+.temp-debug-section h3 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 1px solid #111111;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #111111;
+  color: #f5f1ea;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #111111;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+}

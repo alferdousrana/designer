@@ -1,0 +1,157 @@
+.experience-section {
+  background: #05050d;
+  padding: 90px 0 110px;
+  color: #f5f1ea;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.experience-image-col {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+}
+
+.experience-person-image {
+  width: 100%;
+  max-width: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+.experience-image-placeholder {
+  width: 100%;
+  max-width: 420px;
+  height: 520px;
+  border: 1px dashed #8d857b;
+  color: #8d857b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.experience-eyebrow {
+  color: #f3c98d;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.experience-title {
+  font-size: 78px;
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: 56px;
+}
+
+.experience-title-light {
+  color: #d7d2ea;
+}
+
+.experience-title-accent {
+  color: #e7bf8c;
+}
+
+.experience-items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 42px 36px;
+}
+
+.experience-item {
+  min-height: 190px;
+}
+
+.experience-year-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e2b982;
+  margin-bottom: 18px;
+}
+
+.experience-year {
+  color: #e4bb86;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.experience-line {
+  width: 100%;
+  height: 1px;
+  background: rgba(120, 109, 188, 0.18);
+  margin-bottom: 28px;
+}
+
+.experience-item-title {
+  color: #d7d2ea;
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.experience-item-description {
+  color: #e9e3f7;
+  font-size: 18px;
+  line-height: 1.65;
+  max-width: 260px;
+}
+
+@media (max-width: 1200px) {
+  .experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-title {
+    font-size: 62px;
+  }
+}
+
+@media (max-width: 992px) {
+  .experience-section {
+    padding: 70px 0 80px;
+  }
+
+  .experience-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .experience-title {
+    font-size: 46px;
+  }
+
+  .experience-item-title {
+    font-size: 22px;
+  }
+
+  .experience-item-description {
+    font-size: 16px;
+  }
+
+  .experience-person-image {
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 576px) {
+  .experience-items-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-title {
+    font-size: 36px;
+  }
+}

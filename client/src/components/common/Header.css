@@ -1,0 +1,64 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.dark-header {
+  background: linear-gradient(90deg, #111224 0%, #0d0d1c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.header-wrapper {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.logo-dark {
+  color: #e8c08b;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.nav-menu-dark {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.nav-menu-dark a {
+  color: #f4d2a2;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.header-social-dark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-social-dark a {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  .header-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 14px 0;
+  }
+
+  .nav-menu-dark,
+  .header-social-dark {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

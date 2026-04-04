@@ -1,0 +1,263 @@
+.contact-section {
+  background: #05050d;
+  padding: 90px 0 70px;
+  color: #f5f1ea;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 72px;
+  align-items: start;
+  margin-bottom: 58px;
+}
+
+.contact-eyebrow {
+  color: #f3c98d;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+.contact-title {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  gap: 8px;
+  margin-bottom: 42px;
+}
+
+.contact-title-light {
+  color: #d7d2ea;
+  font-size: 82px;
+  font-weight: 700;
+  letter-spacing: -2px;
+}
+
+.contact-title-accent {
+  color: #e7bf8c;
+  font-size: 82px;
+  font-weight: 700;
+  letter-spacing: -2px;
+}
+
+.contact-description {
+  max-width: 440px;
+  color: #e9e3f7;
+  font-size: 18px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+
+.contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-info-list p {
+  color: #f5f1ea;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.contact-info-icon {
+  color: #e7bf8c;
+  margin-right: 8px;
+}
+
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px 20px;
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-field label {
+  color: #4e4a8f;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.contact-field label span {
+  color: #f1c98f;
+}
+
+.contact-field input,
+.contact-field select,
+.contact-field textarea {
+  background: transparent;
+  border: 1px solid #2b2752;
+  color: #f5f1ea;
+  min-height: 52px;
+  padding: 0 16px;
+  outline: none;
+}
+
+.contact-field textarea {
+  min-height: 120px;
+  padding-top: 14px;
+  resize: vertical;
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: #3d386c;
+}
+
+.contact-field-full {
+  grid-column: 1 / -1;
+}
+
+.contact-submit-btn {
+  margin-top: 22px;
+  min-width: 196px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: none;
+  background: #e3bb84;
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contact-status {
+  margin-top: 14px;
+  font-size: 15px;
+}
+
+.success-status {
+  color: #9ce59c;
+}
+
+.error-status {
+  color: #ff9b9b;
+}
+
+.footer-bar {
+  background: #17172b;
+  padding: 28px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  color: #e8c08b;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.footer-copy {
+  color: #7f78c7;
+  font-size: 18px;
+}
+
+.footer-credit {
+  color: #f1c98f;
+  font-size: 18px;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.footer-right a {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+  .contact-title-light,
+  .contact-title-accent {
+    font-size: 62px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contact-section {
+    padding: 70px 0 60px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .contact-title-light,
+  .contact-title-accent {
+    font-size: 46px;
+  }
+
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 576px) {
+  .contact-title-light,
+  .contact-title-accent {
+    font-size: 36px;
+  }
+
+  .contact-description,
+  .contact-info-list p,
+  .footer-copy,
+  .footer-credit,
+  .footer-right a {
+    font-size: 16px;
+  }
+
+  .footer-logo {
+    font-size: 22px;
+  }
+
+  .contact-submit-btn {
+    width: 100%;
+  }
+}
+
+.contact-field select {
+  background: #05050d;
+  border: 1px solid #2b2752;
+  color: #f5f1ea;
+  min-height: 52px;
+  padding: 0 16px;
+  outline: none;
+}
+
+.contact-field select option {
+  background: #ffffff;
+  color: #111111;
+}
+
+.contact-field select option:hover,
+.contact-field select option:focus,
+.contact-field select option:checked {
+  background: #e3bb84;
+  color: #111111;
+}
