@@ -1,8 +1,8 @@
 import "./HeroSection.css";
 
 function HeroSection({ hero, about }) {
-  const safeHero = hero || {};
-  const safeAbout = about || {};
+  const safeHero = hero && hero.is_active ? hero : {};
+  const safeAbout = about && about.is_active ? about : {};
 
   const greeting = safeHero.greeting || "👋 DESIGNING THINGS FOR HUMAN";
   const fullName = safeHero.full_name || "Talented Designer";
@@ -17,41 +17,33 @@ function HeroSection({ hero, about }) {
 
   const stats = [
     {
-      value: 45,
+      value: safeAbout.awards ?? 45,
       label: "Awards",
     },
     {
-      value: safeAbout.completed_projects ?? 345,
-      label: "Project Finished",
+      value: safeAbout.completed_projects ?? 10,
+      label: "Projects Finished",
     },
     {
-      value: safeAbout.years_of_experience ?? 12,
+      value: safeAbout.years_of_experience ?? 3,
       label: "Years Experience",
     },
     {
-      value: safeAbout.happy_clients ?? 175,
-      label: "Global Clients",
+      value: safeAbout.happy_clients ?? 16,
+      label: "Happy Clients",
     },
   ];
 
   return (
     <section className="hero-v2-section" id="hero">
       <div className="container">
-        {/* <div className="hero-top-rated">
-          <span>Top Rated At</span>
-          <div className="hero-badges">
-            <span className="hero-badge hero-badge-green">fi</span>
-            <span className="hero-badge hero-badge-white">up</span>
-          </div>
-        </div> */}
-
         <div className="hero-v2-card">
           <div className="hero-v2-content">
             <p className="hero-v2-greeting">{greeting}</p>
 
             <h1 className="hero-v2-title">
               <span className="hero-v2-title-light">{fullName}</span>
-              <span className="hero-v2-title-accent">{profession}</span>
+              <span className="hero-v2-title-accent"> {profession}</span>
             </h1>
 
             <p className="hero-v2-description">{shortBio}</p>

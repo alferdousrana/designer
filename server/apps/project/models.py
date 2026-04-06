@@ -33,6 +33,15 @@ class PublishStatus(models.TextChoices):
     ARCHIVED = "archived", "Archived"
 
 
+class Rating(models.IntegerChoices):
+    ZERO = 0, "0"
+    ONE = 1, "1"
+    TWO = 2, "2"
+    THREE = 3, "3"
+    FOUR = 4, "4"
+    FIVE = 5, "5"
+
+
 class Category(TimeStampedModel, ActiveModel, OrderedModel):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True, blank=True)
@@ -85,7 +94,12 @@ class Project(TimeStampedModel, ActiveModel, OrderedModel):
     )
 
     short_desc = models.CharField(max_length=300, blank=True)
-    overview = CKEditor5Field('Content', config_name='default', blank=True)
+    overview = CKEditor5Field("overview", config_name="default", blank=True)
+    challenge = CKEditor5Field("challenge", config_name="default", blank=True)
+    goal = CKEditor5Field("goal", config_name="default", blank=True)
+    process = CKEditor5Field("process", config_name="default", blank=True)
+    solution = CKEditor5Field("solution", config_name="default", blank=True)
+    outcome = CKEditor5Field("outcome", config_name="default", blank=True)
 
     thumbnail = models.ImageField(upload_to="projects/thumbnails/", blank=True, null=True)
     cover_image = models.ImageField(upload_to="projects/covers/", blank=True, null=True)
@@ -95,6 +109,14 @@ class Project(TimeStampedModel, ActiveModel, OrderedModel):
         blank=True,
         help_text="Comma-separated: Figma, Miro, Notion",
     )
+
+    rating = models.IntegerField(
+        choices=Rating.choices,
+        default=Rating.ZERO,
+    )
+
+    client_name = models.CharField(max_length=200, blank=True)
+
     my_role = models.CharField(max_length=200, blank=True)
     duration = models.CharField(
         max_length=100,
@@ -177,7 +199,7 @@ class ProjectSection(TimeStampedModel, ActiveModel, OrderedModel):
         related_name="sections",
     )
     title = models.CharField(max_length=200, blank=True)
-    content = CKEditor5Field('Content', config_name='default', blank=True)
+    content = CKEditor5Field("Content", config_name="default", blank=True)
     image = models.ImageField(upload_to="projects/sections/", blank=True, null=True)
 
     class Meta(OrderedModel.Meta):
@@ -194,8 +216,12 @@ class ProjectMetric(TimeStampedModel, ActiveModel, OrderedModel):
         on_delete=models.CASCADE,
         related_name="metrics",
     )
-    label = models.CharField(max_length=100,)
-    value = models.CharField(max_length=100, help_text="Example: 40%, 12K+, 3 Weeks", blank=True)
+    label = models.CharField(max_length=100)
+    value = models.CharField(
+        max_length=100,
+        help_text="Example: 40%, 12K+, 3 Weeks",
+        blank=True,
+    )
 
     class Meta(OrderedModel.Meta):
         verbose_name = "Project Metric"

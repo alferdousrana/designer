@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import useBlogs from "../hooks/useBlogs";
+import useHomeData from "../hooks/useHomeData";
 import BlogHero from "../components/blog/BlogHero";
 import BlogGrid from "../components/blog/BlogGrid";
 import "../components/blog/BlogPage.css";
@@ -8,6 +9,7 @@ import "../components/blog/BlogPage.css";
 function Blogs() {
   const [page, setPage] = useState(1);
   const { blogs, pagination, loading, error } = useBlogs(page);
+  const { homeData } = useHomeData();
 
   function handlePageChange(nextPage) {
     if (nextPage < 1) return;
@@ -16,7 +18,7 @@ function Blogs() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout socialLinks={homeData?.social_links}>
       <BlogHero />
 
       {loading && (

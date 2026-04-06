@@ -24,10 +24,45 @@ function normalizeContactInfo(contactInfo) {
   };
 }
 
-function ContactSection({ contactInfo, socialLinks = [], onSubmitContact }) {
+function normalizeContactSectionData(sectionData) {
+  if (!sectionData || sectionData?.is_active === false) {
+    return {
+      eyebrow: "😎 INTERESTED?",
+      title_light: "Let's",
+      title_accent: "Connect!",
+      submit_button_text: "Send",
+      footer_logo_text: "RiJU",
+      footer_copyright_text: "© 2026 Riju",
+      footer_credit_text: "by Afroza Riju",
+    };
+  }
+
+  return {
+    eyebrow: sectionData.eyebrow || "😎 INTERESTED?",
+    title_light: sectionData.title_light || "Let's",
+    title_accent: sectionData.title_accent || "Connect!",
+    submit_button_text: sectionData.submit_button_text || "Send",
+    footer_logo_text: sectionData.footer_logo_text || "RiJU",
+    footer_copyright_text:
+      sectionData.footer_copyright_text || "© 2026 Riju",
+    footer_credit_text: sectionData.footer_credit_text || "by Afroza Riju",
+  };
+}
+
+function ContactSection({
+  contactSection,
+  contactInfo,
+  socialLinks = [],
+  onSubmitContact,
+}) {
   const safeContact = useMemo(
     () => normalizeContactInfo(contactInfo),
     [contactInfo]
+  );
+
+  const safeSection = useMemo(
+    () => normalizeContactSectionData(contactSection),
+    [contactSection]
   );
 
   const [formData, setFormData] = useState({
@@ -115,11 +150,16 @@ function ContactSection({ contactInfo, socialLinks = [], onSubmitContact }) {
       <div className="container">
         <div className="contact-grid">
           <div className="contact-left">
-            <p className="contact-eyebrow">😎 INTERESTED?</p>
+            <p className="contact-eyebrow">{safeSection.eyebrow}</p>
 
             <h2 className="contact-title">
-              <span className="contact-title-light">Let&apos;s</span>
-              <span className="contact-title-accent"> Connect!</span>
+              <span className="contact-title-light">
+                {safeSection.title_light}
+              </span>
+              <span className="contact-title-accent">
+                {" "}
+                {safeSection.title_accent}
+              </span>
             </h2>
 
             <p className="contact-description">{safeContact.availability_text}</p>
@@ -128,9 +168,24 @@ function ContactSection({ contactInfo, socialLinks = [], onSubmitContact }) {
               <p>
                 <span className="contact-info-icon">✉</span> {safeContact.email}
               </p>
+
               <p>
                 <span className="contact-info-icon">✆</span> {safeContact.phone}
               </p>
+
+              {safeContact.whatsapp ? (
+                <p>
+                  <span className="contact-info-icon">◉</span>{" "}
+                  {safeContact.whatsapp}
+                </p>
+              ) : null}
+
+              {safeContact.location ? (
+                <p>
+                  <span className="contact-info-icon">⌂</span>{" "}
+                  {safeContact.location}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -220,7 +275,9 @@ function ContactSection({ contactInfo, socialLinks = [], onSubmitContact }) {
                 type="submit"
                 disabled={status.loading}
               >
-                {status.loading ? "Sending..." : "Send"}
+                {status.loading
+                  ? "Sending..."
+                  : safeSection.submit_button_text}
               </button>
 
               {status.success ? (
@@ -236,14 +293,19 @@ function ContactSection({ contactInfo, socialLinks = [], onSubmitContact }) {
 
         <div className="footer-bar">
           <div className="footer-left">
-            <div className="footer-logo">RiJU</div>
-            <p className="footer-copy">© 2026 Riju</p>
-            <p className="footer-credit">by Afroza Riju</p>
+            <div className="footer-logo">{safeSection.footer_logo_text}</div>
+            <p className="footer-copy">{safeSection.footer_copyright_text}</p>
+            <p className="footer-credit">{safeSection.footer_credit_text}</p>
           </div>
 
           <div className="footer-right">
             {(socialLinks?.length ? socialLinks : []).map((item) => (
-              <a key={item.id || item.platform} href={item.url} target="_blank" rel="noreferrer">
+              <a
+                key={item.id || item.platform}
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {item.platform_display || item.platform}
               </a>
             ))}

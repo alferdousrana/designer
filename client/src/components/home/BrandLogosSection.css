@@ -1,15 +1,26 @@
 .brand-logos-section {
   background: #05050d;
   padding: 44px 0 70px;
+  display: flex;              /* ADD */
+  justify-content: center;    /* ADD */
 }
 
+.brand-logos-section .container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* MAIN FIX HERE 👇 */
 .brand-logos-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 34px;
   align-items: center;
+  justify-items: center;   /* ADD → each item center */
 }
 
+/* optional improvement */
 .brand-logo-item {
   display: flex;
   justify-content: center;
@@ -29,6 +40,7 @@
   filter: grayscale(100%) brightness(1.2);
 }
 
+/* responsive unchanged */
 @media (max-width: 1100px) {
   .brand-logos-grid {
     grid-template-columns: repeat(3, 1fr);

@@ -46,7 +46,7 @@ from .serializers import (
             OpenApiParameter(name="category", description="Category slug", required=False, type=str),
             OpenApiParameter(name="is_featured", description="true / false", required=False, type=bool),
             OpenApiParameter(name="is_highlighted", description="true / false", required=False, type=bool),
-            OpenApiParameter(name="search", description="Search by title, short_desc, tools_used, my_role, keywords", required=False, type=str),
+            OpenApiParameter(name="search", description="Search by title, short_desc, tools_used, client_name, my_role, keywords", required=False, type=str),
             OpenApiParameter(name="ordering", description="order, -created_at, title, read_time, view_count", required=False, type=str),
             OpenApiParameter(name="page", description="Page number", required=False, type=int),
         ],
@@ -56,7 +56,8 @@ class ProjectListPublicAPIView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ProjectListSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ["title", "short_desc", "tools_used", "my_role", "keywords"]
+    search_fields = [
+    "title","short_desc","overview","challenge","goal","process","solution" "outcome","tools_used","client_name","my_role","keywords"]
     ordering_fields = ["order", "created_at", "title", "read_time", "view_count"]
     ordering = ["order", "-created_at"]
 
@@ -239,7 +240,21 @@ class ProjectManageAPIView(generics.ListCreateAPIView):
     queryset = Project.objects.all().select_related("category").prefetch_related("tags").order_by("order", "-created_at")
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["status", "is_active", "is_featured", "is_highlighted", "category"]
-    search_fields = ["title", "slug", "short_desc", "tools_used", "my_role", "keywords"]
+    search_fields = [
+    "title",
+    "slug",
+    "short_desc",
+    "overview",
+    "challenge",
+    "goal",
+    "process",
+    "solution",
+    "outcome",
+    "tools_used",
+    "client_name",
+    "my_role",
+    "keywords",
+]
     ordering_fields = ["order", "created_at", "title", "read_time", "view_count"]
     ordering = ["order", "-created_at"]
     parser_classes = [MultiPartParser, FormParser, JSONParser]

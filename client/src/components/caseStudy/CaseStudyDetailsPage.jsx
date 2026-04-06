@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import useCaseStudyDetails from "../../hooks/useCaseStudyDetails";
 import "./CaseStudyDetailsPage.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function formatDate(dateString) {
   if (!dateString) return "June 18, 2021";
@@ -23,6 +24,15 @@ function getPlainText(htmlString) {
 
 function renderHtml(content) {
   return { __html: content || "" };
+}
+
+function fixImageUrls(htmlString) {
+  if (!htmlString) return "";
+
+  return htmlString.replace(
+    /src="\/media\//g,
+    `src="${BASE_URL}/media/`
+  );
 }
 
 function buildTableOfContents(caseStudy) {
@@ -92,7 +102,8 @@ function GalleryItem({ item }) {
 }
 
 function ContentSection({ id, title, content, image }) {
-  const plainText = getPlainText(content);
+  const fixedContent = fixImageUrls(content);
+  const plainText = getPlainText(fixedContent);
 
   if (!title && !plainText && !image) return null;
 
@@ -103,19 +114,21 @@ function ContentSection({ id, title, content, image }) {
       {plainText && (
         <div
           className="case-study-rich-text"
-          dangerouslySetInnerHTML={renderHtml(content)}
+          dangerouslySetInnerHTML={renderHtml(fixedContent)}
         />
       )}
 
       {image && (
         <div className="case-study-inline-image">
-          <img src={image} alt={title || "Case study section"} />
+          <img
+            src={image.startsWith("http") ? image : `${BASE_URL}${image}`}
+            alt={title || "Case study section"}
+          />
         </div>
       )}
     </section>
   );
 }
-
 function CaseStudyDetailsPage() {
   const { slug } = useParams();
   const { caseStudy, loading, error } = useCaseStudyDetails(slug);

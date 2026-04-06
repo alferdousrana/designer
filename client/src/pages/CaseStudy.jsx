@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MainLayout from "../layouts/MainLayout";
+import useHomeData from "../hooks/useHomeData";
 import useCaseStudies from "../hooks/useCaseStudies";
 import CaseStudyHero from "../components/caseStudy/CaseStudyHero";
 import CaseStudyGrid from "../components/caseStudy/CaseStudyGrid";
@@ -8,6 +9,7 @@ import "../components/caseStudy/CaseStudyPage.css";
 function CaseStudy() {
   const [page, setPage] = useState(1);
   const { caseStudies, pagination, loading, error } = useCaseStudies(page);
+  const { homeData } = useHomeData();
 
   function handlePageChange(nextPage) {
     if (nextPage < 1) return;
@@ -16,7 +18,7 @@ function CaseStudy() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout socialLinks={homeData?.social_links}>
       <CaseStudyHero />
 
       {loading && (

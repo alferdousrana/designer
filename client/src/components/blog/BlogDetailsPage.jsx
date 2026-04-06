@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import useBlogDetails from "../../hooks/useBlogDetails";
 import "./BlogDetailsPage.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function formatDate(dateString) {
   if (!dateString) return "June 18, 2021";
@@ -25,6 +26,15 @@ function getSafeHtml(content) {
   if (!content) return { __html: "" };
   const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(content);
   return { __html: hasHtmlTag ? content : `<p>${content}</p>` };
+}
+
+function fixImageUrls(htmlString) {
+  if (!htmlString) return "";
+
+  return htmlString.replace(
+    /src="\/media\//g,
+    `src="${BASE_URL}/media/`
+  );
 }
 
 function buildTableOfContents(blog) {
@@ -54,7 +64,8 @@ function GalleryItem({ item }) {
 }
 
 function ContentSection({ id, title, content, image }) {
-  const plainText = getPlainText(content);
+  const fixedContent = fixImageUrls(content);
+  const plainText = getPlainText(fixedContent);
 
   if (!title && !plainText && !image) return null;
 
@@ -65,13 +76,13 @@ function ContentSection({ id, title, content, image }) {
       {plainText && (
         <div
           className="blog-rich-text"
-          dangerouslySetInnerHTML={getSafeHtml(content)}
+          dangerouslySetInnerHTML={getSafeHtml(fixedContent)}
         />
       )}
 
       {image && (
         <div className="blog-inline-image">
-          <img src={image} alt={title || "Blog section"} />
+          <img src={getFullImageUrl(image)} alt={title || "Blog section"} />
         </div>
       )}
     </section>

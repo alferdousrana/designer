@@ -3,87 +3,76 @@ import { fallbackProjects } from "../../data/fallbackProjects";
 import { Link } from "react-router-dom";
 
 function getProjectImage(project) {
-  return (
-    project?.cover_image ||
-    project?.thumbnail ||
-    project?.gallery?.find((item) => item?.is_active !== false)?.image ||
-    ""
-  );
-}
-
-function getProjectClient(project) {
-  return (
-    project?.client_name ||
-    project?.client ||
-    project?.client_company ||
-    project?.sections?.find((item) =>
-      item?.title?.toLowerCase().includes("client")
-    )?.content ||
-    "Client Name"
-  );
-}
-
-function getProjectRating(project) {
-  return (
-    project?.rating ||
-    project?.metrics?.find((item) =>
-      item?.label?.toLowerCase().includes("rating")
-    )?.value ||
-    "4.8"
-  );
+  return project?.thumbnail || project?.cover_image || "";
 }
 
 function normalizeProjectsData(projects) {
-  if (!Array.isArray(projects) || projects.length === 0) {
+  const items = Array.isArray(projects)
+    ? projects
+    : Array.isArray(projects?.results)
+    ? projects.results
+    : [];
+
+  if (items.length === 0) {
     return fallbackProjects;
   }
 
-  const mapped = projects
+  const mapped = items
     .filter((item) => item?.is_active !== false && item?.is_featured !== false)
     .map((item, index) => ({
       id: item.id ?? index + 1,
       title: item.title || "Untitled Project",
       slug: item.slug || `project-${index + 1}`,
-      category: {
-        name: item?.category?.name || "Project Category",
-      },
+      category: item?.category?.name || "Project",
       short_desc:
         item.short_desc ||
-        item.overview ||
-        "Fusce mollis sem eu ligula ornare, ut molestie eros volutpat. Praesent condimentum, libero id tincidunt tincidunt, neque ex ultrices purus, interdum gravida enim sapien ac urna.",
+        "No description available for this project.",
       image: getProjectImage(item),
-      client_name: getProjectClient(item),
-      rating: getProjectRating(item),
+      client_name: item?.client_name || "Client",
+      rating: item?.rating ?? "4.8",
       live_url: item.live_url || item.behance_url || item.figma_url || "#",
       order: item.order ?? index + 1,
-      is_active: item.is_active ?? true,
-      is_featured: item.is_featured ?? true,
     }))
     .sort((a, b) => a.order - b.order);
 
   return mapped.length ? mapped : fallbackProjects;
 }
 
-function renderStars() {
-  return "★★★★★";
+function renderStars(rating = 5) {
+  const fullStars = Math.floor(rating);
+  const emptyStars = 5 - fullStars;
+
+  return "★".repeat(fullStars) + "☆".repeat(emptyStars);
 }
 
-function ProjectsShowcaseSection({ projects }) {
+function ProjectsShowcaseSection({ sectionData, projects }) {
   const safeProjects = normalizeProjectsData(projects);
+
+  // section API data
+  const eyebrow = sectionData?.eyebrow || "SHOW CASE";
+  const titleLight = sectionData?.title_light || "Discover";
+  const titleAccent = sectionData?.title_accent || "How I Work";
+  const maxItems = sectionData?.max_items || safeProjects.length;
+
+  const visibleProjects = safeProjects.slice(0, maxItems);
 
   return (
     <section className="projects-showcase-section" id="projects">
       <div className="container">
         <div className="projects-showcase-heading">
-          <p className="projects-showcase-eyebrow">👌 SHOW CASE</p>
+          <p className="projects-showcase-eyebrow">{eyebrow}</p>
+
           <h2 className="projects-showcase-title">
-            <span className="projects-showcase-title-light">Discover</span>
-            <span className="projects-showcase-title-accent"> How I Work</span>
+            <span className="projects-showcase-title-light">{titleLight}</span>
+            <span className="projects-showcase-title-accent">
+              {" "}
+              {titleAccent}
+            </span>
           </h2>
         </div>
 
         <div className="projects-showcase-list">
-          {safeProjects.map((project, index) => {
+          {visibleProjects.map((project, index) => {
             const isReverse = index % 2 === 1;
 
             return (
@@ -104,11 +93,15 @@ function ProjectsShowcaseSection({ projects }) {
                 <div className="project-showcase-content">
                   <div className="project-showcase-meta">
                     <p className="project-showcase-label">PROJECT CATEGORY</p>
-                    <h3 className="project-showcase-name">{project.title}</h3>
+                    <h3 className="project-showcase-name">
+                      {project.title}
+                    </h3>
                   </div>
 
                   <div className="project-showcase-meta">
-                    <p className="project-showcase-label">SHORT DESCRIPTION</p>
+                    <p className="project-showcase-label">
+                      SHORT DESCRIPTION
+                    </p>
                     <p className="project-showcase-description">
                       {project.short_desc}
                     </p>
@@ -127,16 +120,16 @@ function ProjectsShowcaseSection({ projects }) {
                     <div className="project-showcase-rating">
                       <span>({project.rating})</span>
                       <span className="project-showcase-stars">
-                        {renderStars()}
+                        {renderStars(project.rating)}
                       </span>
                     </div>
 
-                  <Link
-                    to={`/project/${project.slug}`}
-                    className="project-showcase-link"
-                  >
-                    Showcase
-                  </Link>               
+                    <Link
+                      to={`/project/${project.slug}`}
+                      className="project-showcase-link"
+                    >
+                      Showcase
+                    </Link>
                   </div>
                 </div>
               </article>

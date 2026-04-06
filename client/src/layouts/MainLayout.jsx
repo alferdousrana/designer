@@ -1,9 +1,9 @@
 import Header from "../components/common/Header";
 
-function MainLayout({ children }) {
+function MainLayout({ children, socialLinks }) {
   return (
     <>
-      <Header />
+      <Header socialLinks={socialLinks} />
       {children}
     </>
   );

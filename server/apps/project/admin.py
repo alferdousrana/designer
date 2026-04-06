@@ -106,7 +106,13 @@ class ProjectAdmin(admin.ModelAdmin):
         "slug",
         "short_desc",
         "overview",
+        "challenge",
+        "goal",
+        "process",
+        "solution",
+        "outcome",
         "tools_used",
+        "client_name",
         "my_role",
         "keywords",
         "seo_title",
@@ -133,7 +139,16 @@ class ProjectAdmin(admin.ModelAdmin):
                 "category",
                 "tags",
                 "short_desc",
+            )
+        }),
+        ("Core Content", {
+            "fields": (
                 "overview",
+                "challenge",
+                "goal",
+                "process",
+                "solution",
+                "outcome",
             )
         }),
         ("Images", {
@@ -145,6 +160,8 @@ class ProjectAdmin(admin.ModelAdmin):
         ("Project Details", {
             "fields": (
                 "tools_used",
+                "rating",
+                "client_name",
                 "my_role",
                 "duration",
             )

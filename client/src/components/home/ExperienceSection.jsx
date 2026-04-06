@@ -2,11 +2,17 @@ import "./ExperienceSection.css";
 import { fallbackExperience } from "../../data/fallbackExperience";
 
 function normalizeExperienceData(experienceItems) {
-  if (!Array.isArray(experienceItems) || experienceItems.length === 0) {
+  const items = Array.isArray(experienceItems)
+    ? experienceItems
+    : Array.isArray(experienceItems?.results)
+    ? experienceItems.results
+    : [];
+
+  if (items.length === 0) {
     return fallbackExperience;
   }
 
-  const mapped = experienceItems
+  const mapped = items
     .filter((item) => item?.is_active !== false)
     .map((item, index) => ({
       id: item.id ?? index + 1,
@@ -24,8 +30,13 @@ function normalizeExperienceData(experienceItems) {
   return mapped.length ? mapped : fallbackExperience;
 }
 
-function ExperienceSection({ experience, experienceImage }) { 
+function ExperienceSection({ sectionData, experience }) {
   const safeExperience = normalizeExperienceData(experience);
+
+  const eyebrow = sectionData?.eyebrow || "MY JOURNEY & TRACK RECORD";
+  const titleLight = sectionData?.title_light || "Tons Of";
+  const titleAccent = sectionData?.title_accent || "Experiences";
+  const experienceImage = sectionData?.experience_image || "";
 
   return (
     <section className="experience-section" id="experience">
@@ -34,7 +45,7 @@ function ExperienceSection({ experience, experienceImage }) {
           {experienceImage ? (
             <img
               src={experienceImage}
-              alt="Experience"
+              alt={titleAccent || "Experience"}
               className="experience-person-image"
             />
           ) : (
@@ -43,11 +54,11 @@ function ExperienceSection({ experience, experienceImage }) {
         </div>
 
         <div className="experience-content-col">
-          <p className="experience-eyebrow">⏱️ MY JOURNEY &amp; TRACK RECORD</p>
+          <p className="experience-eyebrow">{eyebrow}</p>
 
           <h2 className="experience-title">
-            <span className="experience-title-light">Tons Of</span>
-            <span className="experience-title-accent"> Experiences</span>
+            <span className="experience-title-light">{titleLight}</span>
+            <span className="experience-title-accent"> {titleAccent}</span>
           </h2>
 
           <div className="experience-items-grid">

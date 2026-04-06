@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MainLayout from "../layouts/MainLayout";
+import useHomeData from "../hooks/useHomeData";
 import useProjects from "../hooks/useProjects";
 import ProjectHero from "../components/project/ProjectHero";
 import ProjectGrid from "../components/project/ProjectGrid";
@@ -8,6 +9,7 @@ import "../components/project/ProjectPage.css";
 function Projects() {
   const [page, setPage] = useState(1);
   const { projects, pagination, loading, error } = useProjects(page);
+  const { homeData } = useHomeData();
 
   function handlePageChange(nextPage) {
     if (nextPage < 1) return;
@@ -16,7 +18,7 @@ function Projects() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout socialLinks={homeData?.social_links}>
       <ProjectHero />
 
       {loading && (

@@ -3,11 +3,19 @@ import "./TestimonialsSection.css";
 import { fallbackTestimonials } from "../../data/fallbackTestimonials";
 
 function normalizeTestimonialsData(testimonials) {
-  if (!Array.isArray(testimonials) || testimonials.length === 0) {
+  const items = Array.isArray(testimonials)
+    ? testimonials
+    : Array.isArray(testimonials?.results)
+      ? testimonials.results
+      : [];
+
+  if (items.length === 0) {
     return fallbackTestimonials;
   }
 
-  const mapped = testimonials
+
+
+  const mapped = items
     .filter((item) => item?.is_active !== false)
     .map((item, index) => ({
       id: item.id ?? index + 1,
@@ -29,14 +37,16 @@ function normalizeTestimonialsData(testimonials) {
 }
 
 function renderStars(rating = 5) {
-  const fullStars = Math.round(rating);
-  return "★".repeat(fullStars);
+  const fullStars = Math.floor(rating);
+  const emptyStars = 5 - fullStars;
+
+  return "★".repeat(fullStars) + "☆".repeat(emptyStars);
 }
 
-function TestimonialsSection({ testimonials }) {
+function TestimonialsSection({ sectionData, testimonials }) {
   const safeTestimonials = useMemo(
     () => normalizeTestimonialsData(testimonials),
-    [testimonials]
+    [testimonials],
   );
 
   const [startIndex, setStartIndex] = useState(0);
@@ -60,13 +70,29 @@ function TestimonialsSection({ testimonials }) {
     ];
   }, [safeTestimonials, startIndex]);
 
+  const titleLight = sectionData?.title_light || "Clients";
+  const titleAccent = sectionData?.title_accent || "Talking";
+
+  const satisfactionRate = sectionData?.satisfaction_rate || "100%";
+  const satisfactionRateLabel =
+    sectionData?.satisfaction_rate_label || "Satisfaction Rate";
+
+  const repeatOrderRate = sectionData?.repeat_order_rate || "97%";
+  const repeatOrderLabel = sectionData?.repeat_order_label || "Repeat Order";
+
+  const googleReviewRating = sectionData?.google_review_rating || "4.8";
+  const googleReviewLabel = sectionData?.google_review_label || "Google Review";
+
+  const hireButtonText = sectionData?.hire_button_text || "Hire Me";
+  const hireButtonLink = sectionData?.hire_button_link || "#contact";
+
   return (
     <section className="testimonials-section" id="testimonials">
       <div className="container">
         <div className="testimonials-heading">
           <h2 className="testimonials-title">
-            <span className="testimonials-title-light">Clients</span>
-            <span className="testimonials-title-accent"> Talking</span>
+            <span className="testimonials-title-light">{titleLight}</span>
+            <span className="testimonials-title-accent"> {titleAccent}</span>
           </h2>
         </div>
 
@@ -90,8 +116,15 @@ function TestimonialsSection({ testimonials }) {
                       </div>
                     )}
 
-                    <div>
-                      <h3 className="testimonial-name">{item.client_name}</h3>
+                    <div className="testimonial-client-info">
+                      <div className="testimonial-name-row">
+                        <h3 className="testimonial-name">{item.client_name}</h3>
+
+                        <span className="testimonial-rating">
+                          {renderStars(item.rating)}
+                        </span>
+                      </div>
+
                       <p className="testimonial-role">
                         {item.client_role}
                         {item.client_company ? `, ${item.client_company}` : ""}
@@ -103,11 +136,11 @@ function TestimonialsSection({ testimonials }) {
             </div>
 
             <div className="testimonial-dots">
-              {safeTestimonials.slice(0, 3).map((_, index) => (
+              {safeTestimonials.map((_, index) => (
                 <span
                   key={index}
                   className={`testimonial-dot ${
-                    index === (startIndex % 3) ? "active-dot" : ""
+                    index === startIndex ? "active-dot" : ""
                   }`}
                 />
               ))}
@@ -116,30 +149,33 @@ function TestimonialsSection({ testimonials }) {
 
           <div className="testimonials-right">
             <div className="testimonial-metric">
-              <h3>100%</h3>
-              <p>Satisfaction Rate</p>
+              <h3>{satisfactionRate}</h3>
+              <p>{satisfactionRateLabel}</p>
             </div>
 
             <div className="testimonial-metric-divider" />
 
             <div className="testimonial-metric">
-              <h3>97%</h3>
-              <p>Repeat Order</p>
+              <h3>{repeatOrderRate}</h3>
+              <p>{repeatOrderLabel}</p>
             </div>
 
             <div className="testimonial-metric-divider" />
 
             <div className="testimonial-metric">
               <h3>
-                4.8 <span className="testimonial-stars">{renderStars(5)}</span>
+                {googleReviewRating}{" "}
+                <span className="testimonial-stars">
+                  {renderStars(googleReviewRating)}
+                </span>
               </h3>
-              <p>Google Review</p>
+              <p>{googleReviewLabel}</p>
             </div>
 
             <div className="testimonial-metric-divider" />
 
-            <a href="#contact" className="testimonial-hire-btn">
-              Hire Me
+            <a href={hireButtonLink} className="testimonial-hire-btn">
+              {hireButtonText}
             </a>
           </div>
         </div>

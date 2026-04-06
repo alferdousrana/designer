@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import useProjectDetails from "../../hooks/useProjectDetails";
 import "./ProjectDetailsPage.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function formatDate(dateString) {
   if (!dateString) return "June 18, 2021";
@@ -16,6 +17,15 @@ function formatDate(dateString) {
   });
 }
 
+function fixImageUrls(htmlString) {
+  if (!htmlString) return "";
+
+  return htmlString.replace(
+    /src="\/media\//g,
+    `src="${BASE_URL}/media/`
+  );
+}
+
 function getPlainText(htmlString) {
   if (!htmlString) return "";
   return htmlString.replace(/<[^>]*>/g, "").trim();
@@ -23,8 +33,14 @@ function getPlainText(htmlString) {
 
 function getSafeHtml(content) {
   if (!content) return { __html: "" };
-  const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(content);
-  return { __html: hasHtmlTag ? content : `<p>${content}</p>` };
+
+  const fixedContent = fixImageUrls(content);
+
+  const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(fixedContent);
+
+  return {
+    __html: hasHtmlTag ? fixedContent : `<p>${fixedContent}</p>`,
+  };
 }
 
 function buildTableOfContents(project) {

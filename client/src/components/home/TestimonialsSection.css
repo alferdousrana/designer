@@ -161,6 +161,25 @@
   margin-top: 20px;
 }
 
+.testimonial-client-info {
+  width: 100%;
+}
+
+/* name + rating same row */
+.testimonial-name-row {
+  display: flex;
+  justify-content: space-between; /* 🔥 key */
+  align-items: center;
+  width: 100%;
+}
+
+/* star styling */
+.testimonial-rating {
+  color: #ffbf55;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
 @media (max-width: 1200px) {
   .testimonials-title {
     font-size: 66px;

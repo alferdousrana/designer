@@ -20,7 +20,7 @@ function Home() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout socialLinks={homeData?.social_links}>
       {loading && (
         <main className="container page-state">
           <p>Loading homepage data...</p>
@@ -36,17 +36,27 @@ function Home() {
           )}
 
           <HeroSection hero={homeData?.hero} about={homeData?.about} />
-          <BrandLogosSection />
+          <BrandLogosSection brands={homeData?.brand_logos} />
           <AboutSection about={homeData?.about} />
           <SkillsSection skills={homeData?.skills} />
           <ExperienceSection
-            experience={homeData?.experience}
-            experienceImage={homeData?.experience_image}
+            sectionData={homeData?.experience_section}
+            experience={homeData?.experience_items}
           />
-          <TestimonialsSection testimonials={homeData?.testimonials} />
-          <ProjectsShowcaseSection projects={featuredProjects} />
-          <BlogSection blogs={featuredBlogs} />
+          <TestimonialsSection
+            sectionData={homeData?.testimonials_section}
+            testimonials={homeData?.testimonials}
+          />
+          <ProjectsShowcaseSection
+            sectionData={homeData?.projects_showcase_section}
+            projects={featuredProjects}
+          />
+          <BlogSection
+            blogSection={homeData?.blog_section}
+            blogs={featuredBlogs}
+          />
           <ContactSection
+            contactSection={homeData?.contact_section}
             contactInfo={homeData?.contact_info}
             socialLinks={homeData?.social_links}
             onSubmitContact={handleContactSubmit}
