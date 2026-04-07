@@ -140,7 +140,12 @@ CKEDITOR_5_CONFIGS = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://afrozariju.vercel.app",
+    "https://designer-red-xi.vercel.app",
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "https://afrozariju.vercel.app",
+    "https://designer-red-xi.vercel.app",
 ]
